@@ -221,9 +221,9 @@ class _ProDetailsState extends State<ProDetails> {
                               },
                               qtyFormProps:
                                   QtyFormProps(enableTyping: false), //
-                              initVal: 0,
+                              initVal: 1,
                               steps: 1,
-                              minVal: 0,
+                              minVal: 1,
                             ),
                           ],
                         ),

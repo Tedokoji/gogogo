@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CartItemView extends StatefulWidget {
-  final String name;
-  final int price;
-  final int quantity;
-  final String url;
-  final String keyid;
-  final Function(String) Del;
-  CartItemView({
-    required this.name,
+class HistoryView extends StatefulWidget {
+  final String date;
+  final String address;
+  final String price;
+  final String status;
+  final String id;
+
+  HistoryView({
+    required this.date,
+    required this.address,
     required this.price,
-    required this.quantity,
-    required this.url,
-    required this.keyid,required this.Del
+    required this.status,
+    required this.id,
   });
 
   @override
   _CartItemViewState createState() => _CartItemViewState();
 }
 
-class _CartItemViewState extends State<CartItemView> {
+class _CartItemViewState extends State<HistoryView> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -45,20 +45,6 @@ class _CartItemViewState extends State<CartItemView> {
         height: 120.0,
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
-              child: Image.network(
-                '${widget.url}',
-                fit: BoxFit.contain,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(child: CircularProgressIndicator());
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return Center(child: Text('Error loading image'));
-                },
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(8.0),
@@ -67,7 +53,7 @@ class _CartItemViewState extends State<CartItemView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${widget.name}',
+                      '${widget.date}',
                       style: GoogleFonts.getFont(
                         'Poppins',
                         fontWeight: FontWeight.w500,
@@ -84,7 +70,7 @@ class _CartItemViewState extends State<CartItemView> {
                     Row(
                       children: [
                         Text(
-                          'Số lượng ${widget.quantity}',
+                          'Số lượng ${widget.address}',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -92,8 +78,7 @@ class _CartItemViewState extends State<CartItemView> {
                           icon: const Icon(Icons.delete),
                           onPressed: () {
                             // Add delete logic here
-                            widget.Del(widget.keyid);
-                            
+                            //widget.Del(widget.keyid);
                           },
                         )
                       ],

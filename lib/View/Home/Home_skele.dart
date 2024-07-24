@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gogogo/API/shareprefs.dart';
 import 'package:gogogo/View/Accounts/Account.dart';
 import 'package:gogogo/View/Home/Home.dart';
+import 'package:gogogo/View/Order/History.dart';
 
 class HomeSKE extends StatelessWidget {
   const HomeSKE({super.key});
@@ -86,27 +87,7 @@ class _NavigationExampleState extends State<NavigationExample> {
         Home(),
 
         /// Notifications page
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 1'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 2'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-            ],
-          ),
-        ),
+        History(),
         Account(number: number, proName: proName, proURL: proURL)
       ][currentPageIndex],
     );
