@@ -10,8 +10,8 @@ import 'package:gogogo/View/LogReg/Regis.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
-
+  final String id;
+  const EditProfile({super.key, required this.id});
   @override
   State<EditProfile> createState() => LoginState();
 }
@@ -245,9 +245,9 @@ class LoginState extends State<EditProfile> {
 
                                             final ref =
                                                 FirebaseDatabase.instance.ref();
-                                            var accname = await getUserName();
+                                            
                                             final snapshot = await ref
-                                                .child('users/${accname}')
+                                                .child('users/${widget.id}')
                                                 .get();
 
                                             if (name == '') {
@@ -262,7 +262,7 @@ class LoginState extends State<EditProfile> {
                                             } else {
                                               DatabaseReference ref =
                                                   FirebaseDatabase.instance
-                                                      .ref("users/${accname}");
+                                                      .ref("users/${widget.id}");
 
                                               print('clciked db rel');
                                               storeFireBaseDataUser(number, name, url);
@@ -271,16 +271,7 @@ class LoginState extends State<EditProfile> {
                                                 "ProName": "${name}",
                                                 "proURL": "${url}",
                                               });
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Account(
-                                                          number: number,
-                                                          proName: name,
-                                                          proURL: url,
-                                                        )),
-                                              );
+                                              
                                             }
                                           },
                                           child: Text(

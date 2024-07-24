@@ -348,7 +348,7 @@ class _MyRegisPageState extends State<RegisPage> {
                                     });
                                   } else {
                                     storeUserLogin('$name');
-
+                                    
                                     print('clciked db rel');
                                     final ref = FirebaseDatabase.instance
                                         .ref('users/${name}');

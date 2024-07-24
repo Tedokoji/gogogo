@@ -307,7 +307,7 @@ class _ProDetailsState extends State<ProDetails> {
                                   child: Align(
                                     alignment: Alignment.topLeft,
                                     child: Text(
-                                      'Total',
+                                      'Tổng',
                                       style: GoogleFonts.getFont(
                                         'Poppins',
                                         fontWeight: FontWeight.w500,

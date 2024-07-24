@@ -1,0 +1,193 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gogogo/API/shareprefs.dart';
+import 'package:gogogo/View/Accounts/AccountCard.dart';
+import 'package:gogogo/View/Accounts/EditAcc.dart';
+import 'package:gogogo/View/Home/Home_skele.dart';
+import 'package:gogogo/View/Order/HisToryBuild.dart';
+
+class AdminItem {
+  final String Accname;
+  final String Proname;
+  final String num;
+  final String url;
+
+  const AdminItem({
+    required this.Accname,
+    required this.Proname,
+    required this.num,
+    required this.url,
+  });
+}
+
+class Admin extends StatefulWidget {
+  @override
+  _AdminState createState() => _AdminState();
+}
+
+class _AdminState extends State<Admin> {
+  List<AdminItem> _cartItems = [];
+  //bool isadmin = await getIsAdmin();
+  void initState() {
+    super.initState();
+    _fetchHisItems(); // Fetch data on widget initialization
+  }
+
+  Future<void> onClose(String id) async {
+    final ref = FirebaseDatabase.instance.ref();
+    final currentUser = await getUserName();
+
+    await ref.child('users/${id}').remove();
+    setState(() {});
+  }
+
+  Future<void> onCheck(String id) async {
+    final currentUser = await getUserName();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EditProfile( id : id)),
+    );
+  }
+
+  Future<List<AdminItem>> _fetchHisItems() async {
+    final ref = FirebaseDatabase.instance.ref();
+    final currentUser = await getUserName();
+    final snapshot = await ref.child('/users/').get();
+    try {
+      final data = await snapshot.value as Map<dynamic, dynamic>;
+      _cartItems = data.entries.map((entry) {
+        // var price = entry.value['price'] as int;
+        // if (totalPrice != null) {
+        //   totalPrice = totalPrice + price;
+        // }
+        return AdminItem(
+            Accname: entry.key as String,
+            Proname: entry.value['ProName'] as String,
+            url: entry.value['proURL'] as String,
+            num: entry.value['Phonenum'] as String);
+      }).toList();
+      // Update UI when data is fetched
+    } catch (e) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeSKE()),
+      );
+    }
+
+    return _cartItems;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<AdminItem>>(
+        future: _fetchHisItems(), // Your function to fetch cart items
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            Fluttertoast.showToast(
+              msg: "Không có ai ngoài bạn",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeSKE()),
+            );
+
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          if (snapshot.hasData) {
+            final cartItems = snapshot.data!; // Safe access after null check
+
+            return Scaffold(
+                appBar: AppBar(
+                  title: const Text('Danh sách tài khoản'), // Title: Cart
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () =>
+                        Navigator.pop(context), // Handle back button press
+                  ),
+                  backgroundColor:
+                      Colors.white, // Set white background for app bar
+                ),
+                body: ListView.builder(
+                  itemCount: cartItems.length,
+                  itemBuilder: (context, index) {
+                    final cartItem = cartItems[index];
+
+                    //totalPrice += cartItem.price;
+                    return AccountCard(
+                      accountname: cartItem.Accname,
+                      Number: cartItem.num,
+                      URL: cartItem.url,
+                      isAdmin: false,
+                      ProName: cartItem.Proname,
+                      onCheck: (id) => onCheck(id),
+                      onClose: (id) => onClose(id),
+                    );
+                  },
+                ));
+          }
+          return Center(child: CircularProgressIndicator());
+        }
+        // Add content or other widgets inside the container here
+        );
+  }
+}
+// Container(
+//                     margin: EdgeInsets.all(5),
+//                     decoration: BoxDecoration(
+//                         border: Border.all(color: Colors.green),
+//                         borderRadius: BorderRadius.circular(10)),
+//                     padding: EdgeInsets.all(1),
+//                     width: double.infinity,
+//                     height: 120.0,
+//                     child: Row(
+//                       children: [
+//                         ClipRRect(
+//                           borderRadius: BorderRadius.circular(10.0),
+//                           child: Image.network(
+//                             '${product.thumb}',
+//                             // Optional properties
+//                             fit: BoxFit
+//                                 .contain, // Adjust fit as needed (e.g., BoxFit.fill, BoxFit.contain)
+//                             loadingBuilder: (context, child, loadingProgress) {
+//                               if (loadingProgress == null) return child;
+//                               return Center(child: CircularProgressIndicator());
+//                             },
+//                             errorBuilder: (context, error, stackTrace) {
+//                               return Center(child: Text('Error loading image'));
+//                             },
+//                           ),
+//                         ),
+//                         Expanded(
+//                           child: Padding(
+//                             padding: const EdgeInsets.all(8.0),
+//                             child: Column(
+//                               mainAxisAlignment: MainAxisAlignment.center,
+//                               crossAxisAlignment: CrossAxisAlignment.start,
+//                               children: [
+//                                 Text('${product.name}',
+//                                     style: GoogleFonts.getFont(
+//                                       'Poppins',
+//                                       fontWeight: FontWeight.w500,
+//                                       fontSize: 14,
+//                                       height: 1.4,
+//                                       color: Color.fromARGB(255, 70, 94, 49),
+//                                     )),
+//                                 Text(
+//                                   '${product.description}',
+//                                   maxLines: 2,
+//                                   overflow: TextOverflow.ellipsis,
+//                                 ),
+//                               ],
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   )

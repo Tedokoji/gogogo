@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gogogo/API/shareprefs.dart';
 
 import 'package:gogogo/View/Home/Home_skele.dart';
@@ -19,8 +22,8 @@ class LoginScreen extends StatefulWidget {
 class LoginState extends State<LoginScreen> {
   int _counter = 0;
   String name = '';
-    bool isnamenotexist = false;
-    
+  bool isnamenotexist = false;
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -84,8 +87,10 @@ class LoginState extends State<LoginScreen> {
                                         margin: EdgeInsets.fromLTRB(0, 0, 0, 4),
                                         child: Align(
                                           alignment: Alignment.topLeft,
-                                          child: Text(isnamenotexist ? 'Account does not exist' : 
-                                            'Name:',
+                                          child: Text(
+                                            isnamenotexist
+                                                ? 'Tên không tồn tại'
+                                                : 'Tên:',
                                             style: GoogleFonts.getFont(
                                               'Poppins',
                                               fontWeight: FontWeight.w400,
@@ -116,7 +121,7 @@ class LoginState extends State<LoginScreen> {
                                               });
                                             },
                                             decoration: InputDecoration(
-                                              hintText: 'Input your name',
+                                              hintText: 'Tên đăng nhập',
                                               hintStyle: GoogleFonts.getFont(
                                                 'Poppins',
                                                 fontWeight: FontWeight.w400,
@@ -146,31 +151,43 @@ class LoginState extends State<LoginScreen> {
                         ),
                         child: TextButton(
                           onPressed: () async {
-                            if(name == '') return;
+                            if (name == '') return;
                             final ref = FirebaseDatabase.instance.ref();
                             final snapshot =
                                 await ref.child('users/${name}').get();
-                              if(!snapshot.exists) {
-                                isnamenotexist = true;
-                                return;
-                                }else{
-                                storeUserLogin('$name');
-                                
-                                    var testbruh =await ref.child('users/${name}/Phonenum').get();
-                                    
-                                   // storeIsAdmin(bool.parse(isaddddminnn.value));
-                                    storeFireBaseDataUser(
-                                        '${testbruh.value}',
-                                        name,
-                                        '');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomeSKE()),
-                            );}
+                            final reff =
+                                await ref.child('users/${name}/admin').get();
+                            if (!snapshot.exists) {
+                              isnamenotexist = true;
+                              Fluttertoast.showToast(
+                                msg:
+                                    "Tên không tồn tại",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                backgroundColor: Colors.green,
+                                textColor: Colors.white,
+                                fontSize: 16.0,
+                              );
+                              return;
+                            } else {
+                              storeUserLogin('$name');
+
+                              var testbruh = await ref
+                                  .child('users/${name}/Phonenum')
+                                  .get();
+                              storeIsAdmin(reff.value as bool);
+                              // storeIsAdmin(bool.parse(isaddddminnn.value));
+                              storeFireBaseDataUser(
+                                  '${testbruh.value}', name, '');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HomeSKE()),
+                              );
+                            }
                           },
                           child: Text(
-                            'Login',
+                            'Đăng nhập',
                             style: GoogleFonts.getFont(
                               'Poppins',
                               fontWeight: FontWeight.w500,
@@ -180,6 +197,9 @@ class LoginState extends State<LoginScreen> {
                             ),
                           ),
                         ),
+                      ),
+                      SizedBox(
+                        height: 50,
                       ),
                       GestureDetector(
                         child: Container(
@@ -195,7 +215,7 @@ class LoginState extends State<LoginScreen> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: 'Don’t have an account?',
+                                  text: 'Chưa đăng ký?  ',
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontWeight: FontWeight.w500,
@@ -205,10 +225,7 @@ class LoginState extends State<LoginScreen> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' ',
-                                ),
-                                TextSpan(
-                                  text: 'Register',
+                                  text: 'Đăng ký',
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontWeight: FontWeight.w500,

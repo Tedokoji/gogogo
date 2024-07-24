@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gogogo/API/shareprefs.dart';
+import 'package:gogogo/View/Accounts/Admin.dart';
 import 'package:gogogo/View/Accounts/ConfirmDel.dart';
 import 'package:gogogo/View/Accounts/EditAcc.dart';
 import 'package:gogogo/View/LogReg/Login.dart';
@@ -112,49 +113,64 @@ class _AccountState extends State<Account> {
                 shrinkWrap: true, // Prevent list from expanding unnecessarily
                 itemCount: _settingsList.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_settingsList[index]),
-                    trailing: Icon(Icons.chevron_right),
-                    onTap: () async {
-                      if (index == 0) {
-                        final user = await getUserName();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Cart(
-                              currentUser: user, 
-                              
-                            ),
-                          ),
-                        );
-                      }
-                      if (index == 1) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const EditProfile(),
-                          ),
-                        );
-                      }
-                      if (index == 4) {
-                        clearUserLogin();
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
-                          ),
-                        );
-                      }
-                      if (index == 3) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ConfirmationPage(),
-                          ),
-                        );
-                      }
-                    }, // Add your action
+                  return FutureBuilder<bool>(
+                    future: getIsAdmin(),
+                    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                      return ListTile(
+                        title: Text(_settingsList[index]),
+                        trailing: Icon(Icons.chevron_right),
+                        onTap: () async {
+                          if (index == 0) {
+                            final user = await getUserName();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Cart(
+                                  currentUser: user, 
+                                  
+                                ),
+                              ),
+                            );
+                          }
+                          if (index == 1) {
+                            final user = await getUserName();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProfile(id : user),
+                              ),
+                            );
+                          }
+                          if (index == 2) {
+                            if(!snapshot.data!) return;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>  Admin(),
+                              ),
+                            );
+                          }
+                          if (index == 4) {
+                            clearUserLogin();
+                      
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginScreen(),
+                              ),
+                            );
+                          }
+                          if (index == 3) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ConfirmationPage(),
+                              ),
+                            );
+                          }
+                        }, // Add your action
+                      );
+                    }
                   );
                 },
               ),
@@ -167,10 +183,10 @@ class _AccountState extends State<Account> {
 
   // Sample settings list
   final List<String> _settingsList = [
-    'Cart',
-    'Edit Profile',
-    'Admin Function',
-    'Delete my account',
-    'Logout',
+    'Giỏ hàng',
+    'Tùy chỉnh thông tin',
+    'Chức năng admin',
+    'Xóa tài khoản',
+    'Đăng xuất',
   ];
 }
