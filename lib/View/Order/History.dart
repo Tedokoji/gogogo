@@ -70,8 +70,7 @@ class _HistoryState extends State<History> {
         MaterialPageRoute(builder: (context) => HomeSKE()),
       );
     }
-    var isaddddminnn = await ref.child('users/${currentUser}/admin').get();
-    isadmin = isaddddminnn.value as bool ?? false;
+    
     return _cartItems;
   }
 

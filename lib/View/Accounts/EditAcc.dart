@@ -271,8 +271,9 @@ class LoginState extends State<EditProfile> {
                                                 "ProName": "${name}",
                                                 "proURL": "${url}",
                                               });
-                                              
+                                              Navigator.pop(context);
                                             }
+
                                           },
                                           child: Text(
                                             'Thay đổi',
