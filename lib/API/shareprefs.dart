@@ -12,7 +12,15 @@ Future<String> getUserName() async {
   final pref = await SharedPreferences.getInstance();
   return pref.getString('username') ?? ''; // Default to false if not set
 }
-
+Future<bool> getIsAdmin() async {
+  final pref = await SharedPreferences.getInstance();
+  return pref.getBool('isAdmin') ?? false; // Default to
+}
+Future<bool> storeIsAdmin(bool a) async {
+  final pref = await SharedPreferences.getInstance();
+  
+  return pref.setBool('isAdmin', a) ?? false; // Default to
+}
 Future<void> storeUserLogin(String username) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setBool('isLoggedIn', true);

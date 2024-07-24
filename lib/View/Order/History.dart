@@ -28,16 +28,26 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
   List<HistoryItem> _cartItems = [];
-
+  bool isadmin = false;
   void initState() {
     super.initState();
     _fetchHisItems(); // Fetch data on widget initialization
   }
-
-  Future<List<HistoryItem>> _fetchHisItems() async {
+  Future<void> onClose(String id) async {
     final ref = FirebaseDatabase.instance.ref();
     final currentUser = await getUserName();
 
+    await ref.child('users/${currentUser}/History/$id').remove();
+    setState(() {
+      
+    });
+  }
+  void onCheck(){
+
+  }
+  Future<List<HistoryItem>> _fetchHisItems() async {
+    final ref = FirebaseDatabase.instance.ref();
+    final currentUser = await getUserName();
     final snapshot = await ref.child('/users/${currentUser}/History').get();
     try {
       final data = await snapshot.value as Map<dynamic, dynamic>;
@@ -60,7 +70,8 @@ class _HistoryState extends State<History> {
         MaterialPageRoute(builder: (context) => HomeSKE()),
       );
     }
-
+    var isaddddminnn = await ref.child('users/${currentUser}/admin').get();
+    isadmin = isaddddminnn.value as bool ?? false;
     return _cartItems;
   }
 
@@ -104,6 +115,7 @@ class _HistoryState extends State<History> {
                   itemCount: cartItems.length,
                   itemBuilder: (context, index) {
                     final cartItem = cartItems[index];
+
                     //totalPrice += cartItem.price;
                     return HistoryView(
                       date: cartItem.date,
@@ -111,6 +123,9 @@ class _HistoryState extends State<History> {
                       price: cartItem.price,
                       status: cartItem.status,
                       id: cartItem.id,
+                      isAdmin: isadmin,
+                      onCheck: onCheck,
+                      onClose:(id)=> onClose(id),
                     );
                   },
                 ));

@@ -121,8 +121,8 @@ class _MyRegisPageState extends State<RegisPage> {
                                                       builder:
                                                           (context) => Text(
                                                                 isnameWrong
-                                                                    ? 'Error: Name empty or existed'
-                                                                    : 'Name',
+                                                                    ? 'Error:Tên không hợp lệ'
+                                                                    : 'Tên',
                                                                 style:
                                                                     GoogleFonts
                                                                         .getFont(
@@ -165,7 +165,7 @@ class _MyRegisPageState extends State<RegisPage> {
                                                     },
                                                     decoration: InputDecoration(
                                                       hintText:
-                                                          'Input your name',
+                                                          'Nhập tên tài khoản',
                                                       hintStyle:
                                                           GoogleFonts.getFont(
                                                         'Poppins',
@@ -196,7 +196,7 @@ class _MyRegisPageState extends State<RegisPage> {
                                                 child: Text(
                                                   isnumWrong
                                                       ? 'Phone empty or existed'
-                                                      : 'No. Handphone',
+                                                      : 'Số điện thoại',
                                                   style: GoogleFonts.getFont(
                                                     'Poppins',
                                                     fontWeight: FontWeight.w400,
@@ -230,7 +230,7 @@ class _MyRegisPageState extends State<RegisPage> {
                                                     });
                                                   },
                                                   decoration: InputDecoration(
-                                                    hintText: 'No. Handphone',
+                                                    hintText: 'Nhập số',
                                                     hintStyle:
                                                         GoogleFonts.getFont(
                                                       'Poppins',
@@ -261,7 +261,7 @@ class _MyRegisPageState extends State<RegisPage> {
                                       children: [
                                         TextSpan(
                                           text:
-                                              'By tapping "Register" you agree to our ',
+                                              'Bằng việc nhấn nút "Đăng Ký" bạn đã đồng ý với ',
                                           style: GoogleFonts.getFont(
                                             'Poppins',
                                             fontWeight: FontWeight.w400,
@@ -270,7 +270,7 @@ class _MyRegisPageState extends State<RegisPage> {
                                           ),
                                         ),
                                         TextSpan(
-                                          text: 'Terms of Use',
+                                          text: 'Điều khoản sử dụng',
                                           style: GoogleFonts.getFont(
                                             'Poppins',
                                             fontWeight: FontWeight.w400,
@@ -280,7 +280,7 @@ class _MyRegisPageState extends State<RegisPage> {
                                           ),
                                         ),
                                         TextSpan(
-                                          text: ' and ',
+                                          text: ' và ',
                                           style: GoogleFonts.getFont(
                                             'Poppins',
                                             fontWeight: FontWeight.w400,
@@ -289,7 +289,7 @@ class _MyRegisPageState extends State<RegisPage> {
                                           ),
                                         ),
                                         TextSpan(
-                                          text: 'Privacy Policy',
+                                          text: 'Chính sách Riêng tư',
                                           style: GoogleFonts.getFont(
                                             'Poppins',
                                             fontWeight: FontWeight.w400,
@@ -335,7 +335,7 @@ class _MyRegisPageState extends State<RegisPage> {
                                     });
 
                                     return;
-                                  } 
+                                  }
 
                                   if (name == '') {
                                     setState(() {
@@ -350,17 +350,16 @@ class _MyRegisPageState extends State<RegisPage> {
                                     storeUserLogin('$name');
 
                                     print('clciked db rel');
-                                    final ref = FirebaseDatabase.instance.ref('users/${name}');
+                                    final ref = FirebaseDatabase.instance
+                                        .ref('users/${name}');
                                     await ref.set({
                                       "Phonenum": "${number}",
                                       'ProName': "${name}",
-                                      'proURL': ""
+                                      'proURL': "",
+                                      'admin':"false"
                                     });
-                                    
-                                    storeFireBaseDataUser(
-                                        number,
-                                        name,
-                                        '');
+
+                                    storeFireBaseDataUser(number, name, '');
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -370,7 +369,7 @@ class _MyRegisPageState extends State<RegisPage> {
                                   }
                                 },
                                 child: Text(
-                                  'Register',
+                                  'Đăng ký',
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontWeight: FontWeight.w500,
@@ -405,7 +404,7 @@ class _MyRegisPageState extends State<RegisPage> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: 'Have an account?',
+                                  text: 'Đã có tài khoản?',
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontWeight: FontWeight.w500,
@@ -415,7 +414,7 @@ class _MyRegisPageState extends State<RegisPage> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' Login',
+                                  text: ' Đăng nhập',
                                   style: GoogleFonts.getFont(
                                     'Poppins',
                                     fontWeight: FontWeight.w500,

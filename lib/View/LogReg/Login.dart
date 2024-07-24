@@ -156,7 +156,9 @@ class LoginState extends State<LoginScreen> {
                                 }else{
                                 storeUserLogin('$name');
                                 
-                                    var testbruh =await ref.child('users/${name}/Phonenum').get();;
+                                    var testbruh =await ref.child('users/${name}/Phonenum').get();
+                                    
+                                   // storeIsAdmin(bool.parse(isaddddminnn.value));
                                     storeFireBaseDataUser(
                                         '${testbruh.value}',
                                         name,

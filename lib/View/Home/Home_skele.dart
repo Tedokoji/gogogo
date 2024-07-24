@@ -67,15 +67,15 @@ class _NavigationExampleState extends State<NavigationExample> {
                     NavigationDestination(
                       selectedIcon: Icon(Icons.home),
                       icon: Icon(Icons.home_outlined),
-                      label: 'Home',
+                      label: 'Trang chủ',
                     ),
                     NavigationDestination(
                       icon: Badge(child: Icon(Icons.history)),
-                      label: 'History',
+                      label: 'Lịch sử',
                     ),
                     NavigationDestination(
                       icon: Badge(child: Icon(Icons.account_box)),
-                      label: 'Account',
+                      label: 'Tài khoản',
                     ),
                   ],
                 ),
