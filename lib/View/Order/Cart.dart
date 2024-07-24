@@ -9,6 +9,7 @@ import 'package:gogogo/View/Order/CartItem.dart';
 import 'package:gogogo/View/Order/Order.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:input_quantity/input_quantity.dart';
+import 'package:intl/intl.dart';
 
 class CartItem {
   final String name;
@@ -160,7 +161,7 @@ class _CartState extends State<Cart> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Tổng tiền: ${totalPrice} vnd', // Total price
+                          'Tổng tiền: ${NumberFormat.decimalPattern().format(totalPrice)} vnd', // Total price
                           style: const TextStyle(fontSize: 16.0),
                         ),
                         ElevatedButton(
@@ -171,7 +172,7 @@ class _CartState extends State<Cart> {
                               MaterialPageRoute(
                                   builder: (context) => OrderCheckout(
                                         items: cartItems,
-                                        Total: '$totalPrice',
+                                        Total: '${NumberFormat.decimalPattern().format(totalPrice)}',
                                       )),
                             );
 
