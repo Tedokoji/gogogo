@@ -2,13 +2,16 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:gogogo/API/shareprefs.dart';
 import 'package:gogogo/Model/Bike.dart';
 import 'package:gogogo/View/Details/PlusMinusBtn.dart';
 import 'package:gogogo/View/Home/AutoCarousel.dart';
 import 'package:gogogo/View/LogReg/constants.dart';
+import 'package:gogogo/View/Order/Cart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:input_quantity/input_quantity.dart';
 import 'package:intl/intl.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ProDetails extends StatefulWidget {
   //final Map<String, dynamic> productData; // Data about the product
@@ -20,18 +23,50 @@ class ProDetails extends StatefulWidget {
 }
 
 class _ProDetailsState extends State<ProDetails> {
-    int Price = 0;
+  int Price = 0;
+  int _currentQuantity = 1;
   @override
   Widget build(BuildContext context) {
     String outputPrice = NumberFormat.decimalPattern().format(Price);
     // final String name = widget.productData['name']; // Accessing data from parent
     // final String description = widget.productData['description'];
     // final double price = widget.productData['price'];
-    int _currentQuantity = 1;
-    
-    void addOrder(){
+    void addCart() async {
       
+      // Check if an item with the same name already exists
+      try {
+        final currentUser = await getUserName();
+        final ref = FirebaseDatabase.instance.ref('users/${currentUser}/Cart');
+
+        final cartId = ref.push().key;
+
+        // Update the Cart collection with unique ID
+        await ref.child(cartId!).set({
+          "name": widget.bike.name,
+          "price": widget.bike.price,
+          "quantity": _currentQuantity,
+          "url": widget.bike.thumb
+        });
+        Fluttertoast.showToast(
+          msg: "Đã thêm vào giỏ!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } catch (e) {
+        Fluttertoast.showToast(
+          msg: "$e",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     }
+
     void savRating(double) {}
 
     void changeQuan(var val) {
@@ -178,20 +213,17 @@ class _ProDetailsState extends State<ProDetails> {
                               style: TextStyle(
                                   fontSize: 16.0), // Adjust font size as needed
                             ),
-                            Transform.scale(
-                              scale: 1.3,
-                              child: InputQty.int(
-                                onQtyChanged: (val) {
-                                  _currentQuantity = val;
-                                  changeQuan(val);
-                                  print(_currentQuantity);
-                                },
-                                qtyFormProps:
-                                    QtyFormProps(enableTyping: false), //
-                                initVal: 0,
-                                steps: 1,
-                                minVal: 0,
-                              ),
+                            InputQty.int(
+                              onQtyChanged: (val) {
+                                _currentQuantity = val;
+                                changeQuan(val);
+                                print(_currentQuantity);
+                              },
+                              qtyFormProps:
+                                  QtyFormProps(enableTyping: false), //
+                              initVal: 0,
+                              steps: 1,
+                              minVal: 0,
                             ),
                           ],
                         ),
@@ -287,19 +319,19 @@ class _ProDetailsState extends State<ProDetails> {
                                   ),
                                 ),
                                 Text(
-                                    'VND: ${outputPrice}',
-                                    style: GoogleFonts.getFont(
-                                      'Poppins',
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18,
-                                      height: 1.4,
-                                      color: Color(0xFF3C3C3C),
-                                    ),
+                                  'VND: ${outputPrice}',
+                                  style: GoogleFonts.getFont(
+                                    'Poppins',
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 18,
+                                    height: 1.4,
+                                    color: Color(0xFF3C3C3C),
                                   ),
+                                ),
                               ],
                             ),
                             GestureDetector(
-                              onTap: addOrder,
+                              onTap: addCart,
                               child: Container(
                                 margin: EdgeInsets.fromLTRB(0, 1, 0, 1),
                                 child: Container(

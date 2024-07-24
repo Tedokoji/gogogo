@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:gogogo/View/Order/Cart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<bool> isLoggedIn() async {
@@ -48,5 +51,8 @@ Future<void> clearUserLogin() async {
   await prefs.remove('Phonenum');
   await prefs.remove('ProName');
   await prefs.remove('proURL');
+  await prefs.remove('proURL');
   // Remove other stored user data
 }
+
+

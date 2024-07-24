@@ -4,6 +4,7 @@ import 'package:gogogo/API/shareprefs.dart';
 import 'package:gogogo/View/Accounts/ConfirmDel.dart';
 import 'package:gogogo/View/Accounts/EditAcc.dart';
 import 'package:gogogo/View/LogReg/Login.dart';
+import 'package:gogogo/View/Order/Cart.dart';
 
 class Account extends StatefulWidget {
   final String number;
@@ -25,11 +26,13 @@ class _AccountState extends State<Account> {
   // Sample account info
   final String _name = 'John Doe';
   bool _showPopup = false;
+  // Explicit type
+
   String _inputText = "";
   // DatabaseReference ref = FirebaseDatabase
   //                                       .instance
   //                                       .ref("users/${name}");
-
+  List<CartItem> items = [];
   //                                   print('clciked db rel');
 
   //                                   await ref.update({
@@ -112,8 +115,20 @@ class _AccountState extends State<Account> {
                   return ListTile(
                     title: Text(_settingsList[index]),
                     trailing: Icon(Icons.chevron_right),
-                    onTap: () {
+                    onTap: () async {
                       if (index == 0) {
+                        final user = await getUserName();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Cart(
+                              currentUser: user, 
+                              
+                            ),
+                          ),
+                        );
+                      }
+                      if (index == 1) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -121,21 +136,21 @@ class _AccountState extends State<Account> {
                           ),
                         );
                       }
-                      if (index == 3) {
+                      if (index == 4) {
                         clearUserLogin();
 
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>  LoginScreen(),
+                            builder: (context) => LoginScreen(),
                           ),
                         );
                       }
-                      if (index == 2) {
+                      if (index == 3) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>  ConfirmationPage(),
+                            builder: (context) => ConfirmationPage(),
                           ),
                         );
                       }
@@ -152,6 +167,7 @@ class _AccountState extends State<Account> {
 
   // Sample settings list
   final List<String> _settingsList = [
+    'Cart',
     'Edit Profile',
     'Admin Function',
     'Delete my account',
